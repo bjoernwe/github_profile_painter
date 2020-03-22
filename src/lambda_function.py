@@ -71,5 +71,4 @@ def send_empty_github_commits(n: int):
 def aws_lambda_handler(event, context):
     pixel_intensity = get_pattern_intensity_for_today()
     num_commits = GITHUB_COMMIT_REPETITIONS * pixel_intensity
-    github_response = send_empty_github_commits(n=num_commits)
-    return {'statusCode': github_response.status_code}
+    send_empty_github_commits(n=num_commits)
