@@ -20,6 +20,7 @@ assert len(PATTERN[0]) == PATTERN_WIDTH
 GITHUB_TARGET_URL = 'https://api.github.com/repos/bjoernwe/github_profile_painter/contents/res/commit_target.txt'
 GITHUB_FILE_CONTENT = 'IyBUaGlzIGZpbGUgYmUgcmVwZWF0ZWRseSB1cGRhdGVkIHRvIGdlbmVyYXRl\nIGNvbW1pdHM=\n'
 GITHUB_FILE_SHA = '639e1cf495c7b24501f1f152d8623ae4ba807af2'
+GITHUB_BRANCH = 'paint_commits'
 GITHUB_COMMIT_MESSAGE = '🎨 API commit'
 GITHUB_ACCESS_TOKEN_ENV_NAME = 'GITHUB_ACCESS_TOKEN'
 
@@ -46,7 +47,8 @@ def get_week_index(date_time=None) -> int:
 
 def send_empty_github_commit() -> requests.Response:
     url = GITHUB_TARGET_URL
-    data = {'message': GITHUB_COMMIT_MESSAGE,
+    data = {'branch': GITHUB_BRANCH,
+            'message': GITHUB_COMMIT_MESSAGE,
             'content': GITHUB_FILE_CONTENT,
             'sha': GITHUB_FILE_SHA}
     token = os.environ[GITHUB_ACCESS_TOKEN_ENV_NAME]
