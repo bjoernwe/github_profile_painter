@@ -23,6 +23,7 @@ GITHUB_FILE_SHA = '639e1cf495c7b24501f1f152d8623ae4ba807af2'
 GITHUB_BRANCH = 'paint_commits'
 GITHUB_COMMIT_MESSAGE = '🎨 API commit'
 GITHUB_ACCESS_TOKEN_ENV_NAME = 'GITHUB_ACCESS_TOKEN'
+GITHUB_COMMIT_REPETITIONS = 4  # makes the color more robust against accidental additional commits
 
 
 def get_pattern_intensity_for_today() -> int:
@@ -53,11 +54,22 @@ def send_empty_github_commit() -> requests.Response:
             'sha': GITHUB_FILE_SHA}
     token = os.environ[GITHUB_ACCESS_TOKEN_ENV_NAME]
     headers = {'Content-Type': 'application/json', 'Authorization': f'token {token}'}
-    response = requests.put(url=url, data=json.dumps(data), headers=headers)
-    return response
+    github_response = requests.put(url=url, data=json.dumps(data), headers=headers)
+    if not github_response.status_code == 200:
+        error_message = json.loads(github_response.content)
+        raise RuntimeError(f'Error message from GitHub: {error_message}')
+    return github_response
 
 
-if __name__ == '__main__':
-    intensity = get_pattern_intensity_for_today()
-    for _ in range(intensity):
-        send_empty_github_commit()
+def send_empty_github_commits(n: int):
+    last_response = None
+    for _ in range(n):
+        last_response = send_empty_github_commit()
+    return last_response
+
+
+def aws_lambda_handler(event, context):
+    pixel_intensity = get_pattern_intensity_for_today()
+    num_commits = GITHUB_COMMIT_REPETITIONS * pixel_intensity
+    github_response = send_empty_github_commits(n=num_commits)
+    return {'statusCode': github_response.status_code}
