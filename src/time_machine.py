@@ -8,6 +8,18 @@ import pattern
 from configuration import GITHUB_COMMIT_REPETITIONS, GITHUB_COMMIT_MESSAGE, GITHUB_BRANCH
 
 
+def main():
+    local_git_dir = '/home/bjoern/Desktop/profile-pattern'
+    commit_pattern_in_past(git_dir=local_git_dir, days_back=365)
+
+
+def commit_pattern_in_past(git_dir: str, days_back: int = 2*365):
+    for i in range(days_back):
+        with preserve_system_date():
+            set_system_date_to_past(days_back=i)
+            commit_todays_commits(git_dir=git_dir)
+
+
 def set_system_date_to_past(days_back=0):
     past_date = get_datetime_from_past(days_back=days_back)
     set_system_date(dt=past_date)
@@ -27,11 +39,15 @@ def set_system_date(dt: datetime.datetime):
     subprocess.call(['date', '-s', new_date_str])
 
 
-@contextlib.contextmanager
-def preserve_system_date():
-    now = datetime.datetime.now()
-    yield
-    set_system_date(dt=now)
+def commit_todays_commits(git_dir: str):
+    pixel_intensity = pattern.get_pattern_intensity_for_today()
+    if not pixel_intensity:
+        return
+    n_commits = GITHUB_COMMIT_REPETITIONS * pixel_intensity
+    for _ in range(n_commits):
+        create_random_git_commit(git_dir=git_dir,
+                                 message=GITHUB_COMMIT_MESSAGE,
+                                 branch=GITHUB_BRANCH)
 
 
 def preserve_cwd(func):
@@ -52,22 +68,11 @@ def create_random_git_commit(git_dir: str, message: str, branch: str = 'master')
     subprocess.call(['git', 'commit', '-a', '-m', message])
 
 
-def commit_pattern_in_past(git_dir: str, days_back: int = 2*365):
-    for i in range(days_back):
-        with preserve_system_date():
-            set_system_date_to_past(days_back=i)
-            pixel_intensity = pattern.get_pattern_intensity_for_today()
-            if pixel_intensity:
-                n_commits = GITHUB_COMMIT_REPETITIONS * pixel_intensity
-                for _ in range(n_commits):
-                    create_random_git_commit(git_dir=git_dir,
-                                             message=GITHUB_COMMIT_MESSAGE,
-                                             branch=GITHUB_BRANCH)
-
-
-def main():
-    local_git_dir = '/home/bjoern/Desktop/profile-pattern'
-    commit_pattern_in_past(git_dir=local_git_dir, days_back=365)
+@contextlib.contextmanager
+def preserve_system_date():
+    now = datetime.datetime.now()
+    yield
+    set_system_date(dt=now)
 
 
 if __name__ == '__main__':
