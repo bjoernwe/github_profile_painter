@@ -21,7 +21,7 @@ def send_empty_github_commit() -> requests.Response:
     return github_response
 
 
-def send_empty_github_commits(n: int):
+def send_multiple_empty_github_commits(n: int):
     last_response = None
     for _ in range(n):
         last_response = send_empty_github_commit()

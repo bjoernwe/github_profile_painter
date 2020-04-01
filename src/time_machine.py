@@ -20,6 +20,13 @@ def commit_pattern_in_past(git_dir: str, days_back: int = 2*365):
             commit_todays_commits(git_dir=git_dir)
 
 
+@contextlib.contextmanager
+def preserve_system_date():
+    now = datetime.datetime.now()
+    yield
+    set_system_date(dt=now)
+
+
 def set_system_date_to_past(days_back=0):
     past_date = get_datetime_from_past(days_back=days_back)
     set_system_date(dt=past_date)
@@ -66,13 +73,6 @@ def create_random_git_commit(git_dir: str, message: str, branch: str = 'master')
         subprocess.call(['shuf', '-i', '0-999999', '-n1'], stdout=f)
     subprocess.call(['git', 'add', 'random.txt'])
     subprocess.call(['git', 'commit', '-a', '-m', message])
-
-
-@contextlib.contextmanager
-def preserve_system_date():
-    now = datetime.datetime.now()
-    yield
-    set_system_date(dt=now)
 
 
 if __name__ == '__main__':
