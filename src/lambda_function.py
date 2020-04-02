@@ -7,3 +7,7 @@ def aws_lambda_handler(event, context):
     pixel_intensity = get_pattern_intensity_for_today()
     num_commits = GITHUB_COMMIT_REPETITIONS * pixel_intensity
     send_multiple_random_github_commits(n=num_commits)
+
+
+if __name__ == '__main__':
+    aws_lambda_handler(None, None)
