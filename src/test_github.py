@@ -1,29 +1,36 @@
+import base64
 import json
 import os
 import pytest
 import requests
 
-from configuration import GITHUB_ACCESS_TOKEN_ENV_NAME, GITHUB_TARGET_URL, GITHUB_FILE_SHA
+import github
+
+from configuration import GITHUB_ACCESS_TOKEN_ENV_NAME
 
 
 class TestGithubAccess:
 
     @pytest.fixture
-    def valid_token(self):
+    def access_token(self):
         return os.environ[GITHUB_ACCESS_TOKEN_ENV_NAME]
 
-    @pytest.fixture
-    def github_response(self, valid_token):
-        url = GITHUB_TARGET_URL
-        token = os.environ[GITHUB_ACCESS_TOKEN_ENV_NAME]
-        headers = {'Content-Type': 'application/json', 'Authorization': f'token {token}'}
-        response = requests.get(url=url, headers=headers)
-        return response
+    def test_github_access_token_is_defined(self, access_token):
+        assert access_token is not None
+        assert access_token != ''
 
-    def test_access_token_is_valid(self, github_response):
+    @pytest.fixture
+    def github_response(self):
+        return github._get_last_random_content_from_github()
+
+    def test_github_response_has_status_200(self, github_response):
         assert github_response.status_code == 200
 
-    def test_github_file_has_correct_hash(self, github_response):
-        content = json.loads(github_response.content)
-        file_hash = content['sha']
-        assert file_hash == GITHUB_FILE_SHA
+    @pytest.fixture
+    def github_response_dict(self):
+        return github.get_last_random_content_from_github()
+
+    def test_random_content_from_github_in_valid_range(self, github_response_dict):
+        file_content = base64.b64decode(github_response_dict['content'])
+        random_number = int(file_content)
+        assert 0 <= random_number < 1000000

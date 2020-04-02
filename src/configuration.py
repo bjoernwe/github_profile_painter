@@ -12,8 +12,6 @@ assert len(PATTERN) == 7
 assert len(PATTERN[0]) == PATTERN_WIDTH
 
 GITHUB_TARGET_URL = 'https://api.github.com/repos/puerto-rico-rolf/paint-here/contents/random.txt'
-GITHUB_FILE_CONTENT = 'IyBUaGlzIGZpbGUgYmUgcmVwZWF0ZWRseSB1cGRhdGVkIHRvIGdlbmVyYXRl\nIGNvbW1pdHM=\n'
-GITHUB_FILE_SHA = '639e1cf495c7b24501f1f152d8623ae4ba807af2'
 GITHUB_BRANCH = 'master'
 GITHUB_COMMIT_MESSAGE = '🎨 Painting ...'
 GITHUB_ACCESS_TOKEN_ENV_NAME = 'GITHUB_ACCESS_TOKEN'
