@@ -1,7 +1,7 @@
 import base64
 import json
-import numpy as np
 import os
+import random
 import requests
 
 from configuration import GITHUB_TARGET_URL, GITHUB_BRANCH, GITHUB_COMMIT_MESSAGE, GITHUB_ACCESS_TOKEN_ENV_NAME
@@ -13,7 +13,7 @@ def send_random_github_commit() -> dict:
 
 
 def _send_random_github_commit() -> requests.Response:
-    random_new_content = str(base64.b64encode(bytes(str(np.random.randint(1000000)), encoding='utf8')))
+    random_new_content = str(base64.b64encode(bytes(str(random.randint(0, 999999)), encoding='utf8')))
     last_content_sha = get_last_random_content_from_github()['sha']
     data = {'branch': GITHUB_BRANCH,
             'message': GITHUB_COMMIT_MESSAGE,
