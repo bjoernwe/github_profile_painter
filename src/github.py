@@ -33,7 +33,7 @@ def _get_github_request_headers() -> dict:
 def _get_content_dict_from_response(response: requests.Response) -> dict:
     response_content = json.loads(response.content)
     if not response.status_code == 200:
-        raise RuntimeError(f'Error message from GitHub: {response_content}')
+        raise RuntimeError(f'Error message from GitHub: {response.status_code} - {response_content["message"]}')
     return response_content
 
 
