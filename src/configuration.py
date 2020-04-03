@@ -11,6 +11,7 @@ PATTERN_WIDTH = 27
 assert len(PATTERN) == 7
 assert len(PATTERN[0]) == PATTERN_WIDTH
 
+GITHUB_COMMITS_URL = 'https://api.github.com/repos/puerto-rico-rolf/paint-here/commits'
 GITHUB_TARGET_URL = 'https://api.github.com/repos/puerto-rico-rolf/paint-here/contents/random.txt'
 GITHUB_BRANCH = 'master'
 GITHUB_COMMIT_MESSAGE = '🎨 Painting ...'
