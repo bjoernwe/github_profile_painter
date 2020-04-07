@@ -9,8 +9,8 @@ from configuration import GITHUB_COMMIT_REPETITIONS, GITHUB_COMMIT_MESSAGE, GITH
 
 
 def main():
-    local_git_dir = '/home/bjoern/Desktop/profile-pattern'
-    commit_pattern_in_past(git_dir=local_git_dir, days_back=365)
+    local_git_dir = '~/paint-here'
+    commit_pattern_in_past(git_dir=local_git_dir, days_back=2*365)
 
 
 def commit_pattern_in_past(git_dir: str, days_back: int = 2*365):
